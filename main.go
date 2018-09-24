@@ -15,7 +15,7 @@ func main() {
 
 	// Verifica quantos argumentos entraram:
 	if len(os.Args) < 3 {
-		fmt.Println("Faltando parametros de entrada!\n\n")
+		fmt.Println("ERRO: Faltando parametros de entrada!\n\n")
 		fmt.Println("1 - Tamanho do vetor de entrada\n")
 		fmt.Println("2 - Indicie k-menor\n")
 		return
@@ -39,6 +39,15 @@ func main() {
 		return
 	}
 
+	if k > n {
+		fmt.Println("ERRO: k nao pode ser maior que n\n")
+		return
+	}
+	if k <= 0 {
+		fmt.Println("ERRO: k nao pode ser menor ou igual a 0\n")
+		return
+	}
+
 	numbers := generateSlice(int(n))
 	fmt.Println("\nArray desordenado:\n\n", numbers)
 	fmt.Println("\nArray ordenado:\n\n", sorts.MergeSort(numbers), "\n")
@@ -48,8 +57,11 @@ func main() {
 		fmt.Println(err.Error())
 		return
 	}
+	fmt.Println("\nNumero encontrado MergeSelect:\n\n", kSelection)
 
-	fmt.Println("\nNumero encontrado:\n\n", kSelection)
+	kSelectionLinear := selectors.LinearSelect(numbers, int(k))
+
+	fmt.Println("\nNumero encontrado Linear Select:\n\n", kSelectionLinear)
 
 }
 
