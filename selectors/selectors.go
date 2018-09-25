@@ -2,7 +2,6 @@ package selectors
 
 import (
 	"errors"
-	"log"
 
 	"../sorts"
 )
@@ -26,64 +25,121 @@ func SimpleSelect(numbers []int, k int) (int, error) {
 // LINEAR : O(n)
 
 func LinearSelect(numbers []int, k int) int {
-	return LinearSelectionRecursive(numbers, 0, len(numbers)-1, k)
+	// return LinearSelectionRecursive(numbers, 0, len(numbers)-1, k)
+	return Select(numbers, k)
 }
 
-func Partitions(numbers []int, l int, r int, pvt int) int {
-	var tmp int
-	pivot := numbers[pvt]
-	numbers[pvt] = numbers[l]
-
-	// int pivot = array[l];
-	i := l + 1
-	for (numbers[i] < pivot) && (i < r+1) {
-		i++
+func Select(numbers []int, k int) int {
+	n := len(numbers)
+	if n == 1 {
+		return numbers[0]
 	}
+	parts := SplitNumbersInParts(numbers, 5) // O(n)
+	for i := 0; i < len(parts); i++ {        // O(n/5)
+		parts[i] = SmallArraySort(parts[i]) // O(5)
+	}
+	var medians []int
+	for i := 0; i < len(parts); i++ { // O(n)
+		partMedian := GetMedian(parts[i]) // cst
+		medians = append(medians, partMedian)
+	}
+	median := Select(medians, len(medians)/2)
 
-	jstart := i
+	left, equals, right := CreateArrayOfLessEqualsAndGrathers(numbers, median) // O(n)
 
-	for j := jstart; j < r+1; j++ {
-		if numbers[j] < pivot {
-			tmp = numbers[i]
-			numbers[i] = numbers[j]
-			numbers[j] = tmp
-			i++
+	if k < len(left) {
+		return Select(left, k)
+	} else if k <= (len(left) + len(equals)) {
+		return median
+	} else {
+		return Select(right, k-len(left)-len(equals))
+	}
+}
+
+func CreateArrayOfLessEqualsAndGrathers(numbers []int, value int) ([]int, []int, []int) {
+	var less []int
+	var equals []int
+	var grater []int
+
+	for i := 0; i < len(numbers); i++ {
+		if numbers[i] < value {
+			less = append(less, numbers[i])
+		} else if numbers[i] == value {
+			equals = append(equals, numbers[i])
+		} else {
+			grater = append(grater, numbers[i])
 		}
 	}
-
-	// swap pivot
-	numbers[l] = numbers[i-1]
-	numbers[i-1] = pivot
-	return i - 1
+	return less, equals, grater
 }
 
-func LinearSelectionRecursive(numbers []int, l int, r int, k int) int {
-	var pivotPt int
-	if l > r {
-		log.Fatal("Invalid array index! Left index > Right index")
-	} else if (k > r) || (k < l) {
-		log.Fatal(k+1, "_th Statistic is outside array domain")
+func CreateArrayWithValuesLessThen(numbers []int, value int) []int {
+	var results []int
+	for i := 0; i < len(numbers); i++ {
+		if numbers[i] < value {
+			results = append(results, numbers[i])
+		}
 	}
+	return results
+}
 
-	if l < r {
-		pivotPt = (l + r) / 2
+func CreateArrayWithValuesMajorThen(numbers []int, value int) []int {
+	var results []int
+	for i := 0; i < len(numbers); i++ {
+		if numbers[i] > value {
+			results = append(results, numbers[i])
+		}
+	}
+	return results
+}
+
+func CreateArrayWithValuesEqualTo(numbers []int, value int) []int {
+	var results []int
+	for i := 0; i < len(numbers); i++ {
+		if numbers[i] == value {
+			results = append(results, numbers[i])
+		}
+	}
+	return results
+}
+
+func GetMedian(numbers []int) int {
+	n := len(numbers)
+	if n == 0 {
+		return 0
+	} else if n == 1 {
+		return numbers[0]
 	} else {
-		pivotPt = l
+		return numbers[n/2]
 	}
+}
 
-	pst := Partitions(numbers, l, r, pivotPt)
-
-	if pst == k {
-		return numbers[pst]
+func SmallArraySort(numbers []int) []int {
+	for i := 0; i < len(numbers)-1; i++ {
+		if numbers[i] > numbers[i+1] {
+			temp := numbers[i+1]
+			numbers[i+1] = numbers[i]
+			numbers[i] = temp
+		}
 	}
+	return numbers
+}
 
-	if pst > k {
-		return LinearSelectionRecursive(numbers, l, pst-1, k)
+func SplitNumbersInParts(numbers []int, partAmount int) [][]int {
+	var results [][]int
+	n := len(numbers)
+	parts := n / partAmount
+	if n%partAmount > 0 {
+		parts += 1
 	}
-
-	if pst < k {
-		return LinearSelectionRecursive(numbers, pst+1, r, k)
+	for i := 0; i < parts-1; i++ {
+		slice := numbers[i*partAmount : (i*partAmount)+partAmount]
+		results = append(results, slice)
 	}
-
-	return 0
+	var slice []int
+	for i := ((parts - 1) * partAmount); i < n; i++ {
+		slice = append(slice, numbers[i])
+	}
+	results = append(results, slice)
+	return results
 }

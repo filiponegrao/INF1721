@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"./selectors"
-	"./sorts"
 )
 
 func main() {
@@ -40,28 +39,32 @@ func main() {
 	}
 
 	if k > n {
-		fmt.Println("ERRO: k nao pode ser maior que n\n")
+		fmt.Println("ERRO: k nao pode ser maior que n")
 		return
 	}
 	if k <= 0 {
-		fmt.Println("ERRO: k nao pode ser menor ou igual a 0\n")
+		fmt.Println("ERRO: k nao pode ser menor ou igual a 0")
 		return
 	}
 
 	numbers := generateSlice(int(n))
+	prinStart()
 	fmt.Println("\nArray desordenado:\n\n", numbers)
-	fmt.Println("\nArray ordenado:\n\n", sorts.MergeSort(numbers), "\n")
+	// fmt.Println("\nArray ordenado:\n\n", sorts.MergeSort(numbers))
 
-	kSelection, err := selectors.SimpleSelect(numbers, int(k))
-	if err != nil {
-		fmt.Println(err.Error())
-		return
-	}
-	fmt.Println("\nNumero encontrado MergeSelect:\n\n", kSelection)
+	fmt.Println("\n#### SORT SELECTION:")
+	start := time.Now()
+	sortSelection, _ := selectors.SimpleSelect(numbers, int(k))
+	elapsed := time.Since(start)
+	fmt.Println("* Tempo de execucao: ", elapsed)
+	fmt.Println("* Valor retornado: ", sortSelection)
 
-	kSelectionLinear := selectors.LinearSelect(numbers, int(k))
-
-	fmt.Println("\nNumero encontrado Linear Select:\n\n", kSelectionLinear)
+	fmt.Println("\n#### LINEAR SELECTION:")
+	start = time.Now()
+	linearSelection := selectors.LinearSelect(numbers, int(k))
+	elapsed = time.Since(start)
+	fmt.Println("* Tempo de execucao: ", elapsed)
+	fmt.Println("* Valor retornado: ", linearSelection)
 
 }
 
@@ -71,7 +74,16 @@ func generateSlice(size int) []int {
 	rand.Seed(time.Now().UnixNano())
 	for i := 0; i < size; i++ {
 		// slice[i] = rand.Intn(99999) - rand.Intn(99999)
-		slice[i] = rand.Intn(10) //- rand.Intn(10)
+		slice[i] = rand.Intn(1000) //- rand.Intn(10)
 	}
 	return slice
+}
+
+func prinStart() {
+	fmt.Println("##########################################")
+	fmt.Println("#### [INF1721] Analise de Algoritimos ####")
+	fmt.Println("##########################################")
+	fmt.Println("\n# Comparacao de selecao com SortSelection e")
+	fmt.Println("# LinearSelection")
+
 }
