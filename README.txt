@@ -14,5 +14,11 @@ Input:
 Exemplo:
 	go run main.go 10000 12
 
+Rodando o executável:
+
+	Para rodar a aplicação sem ter que compliar, va até a pasta:
+	bin /<sistema operacional>/
+	
+	E escolha de acordo com a arquitetura do seu sistema.s
 
 Filipo Negrão
