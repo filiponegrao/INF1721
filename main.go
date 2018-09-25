@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"time"
 
-	"./selectors"
+	"github.com/filiponegrao/INF1721/selectors"
 )
 
 func main() {
@@ -74,7 +74,7 @@ func generateSlice(size int) []int {
 	rand.Seed(time.Now().UnixNano())
 	for i := 0; i < size; i++ {
 		// slice[i] = rand.Intn(99999) - rand.Intn(99999)
-		slice[i] = rand.Intn(1000) //- rand.Intn(10)
+		slice[i] = rand.Intn(10000) //- rand.Intn(10)
 	}
 	return slice
 }

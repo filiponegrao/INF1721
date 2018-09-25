@@ -3,7 +3,7 @@ package selectors
 import (
 	"errors"
 
-	"../sorts"
+	"github.com/filiponegrao/INF1721/sorts"
 )
 
 // O(n log n)
