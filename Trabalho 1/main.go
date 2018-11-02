@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/filiponegrao/INF1721/selectors"
+	"github.com/filiponegrao/INF1721/sorts"
 )
 
 func main() {
@@ -50,7 +51,7 @@ func main() {
 	numbers := generateSlice(int(n))
 	prinStart()
 	fmt.Println("\nArray desordenado:\n\n", numbers)
-	// fmt.Println("\nArray ordenado:\n\n", sorts.MergeSort(numbers))
+	fmt.Println("\nArray ordenado:\n\n", sorts.MergeSort(numbers))
 
 	fmt.Println("\n#### SORT SELECTION:")
 	start := time.Now()

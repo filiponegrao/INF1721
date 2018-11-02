@@ -14,7 +14,7 @@ func SelectFromSorted(numbers []int, k int) (int, error) {
 	} else if k <= 0 {
 		return 0, errors.New("Índicie precisa ser maior que 0")
 	}
-	return numbers[k], nil
+	return numbers[k-1], nil
 }
 
 func SimpleSelect(numbers []int, k int) (int, error) {
@@ -26,7 +26,7 @@ func SimpleSelect(numbers []int, k int) (int, error) {
 
 func LinearSelect(numbers []int, k int) int {
 	// return LinearSelectionRecursive(numbers, 0, len(numbers)-1, k)
-	return Select(numbers, k)
+	return Select(numbers, k-1)
 }
 
 func Select(numbers []int, k int) int {
